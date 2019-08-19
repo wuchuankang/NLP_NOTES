@@ -59,3 +59,5 @@ $$
 -(y_i\log p_1 +(1-y_i)\log p_2)   \tag{5}
 $$
 * 所以说，Logistic回归就是softmax回归的在二分类时候的特殊形式，反过来说，就是推广。
+* 其实，我们可以看到，softmax对一个向量的各元素进行压缩，sigmoid对一个元素进行压缩，所以softmax和sigmoid是对应的。
+* softmax名字的由来：
