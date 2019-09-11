@@ -1,4 +1,8 @@
 ./example_usage_of_pandas/sqlResult_1558435.csv
 ./example_usage_of_pandas/news_model
 ./example_usage_of_pandas/result_news
+./nlp_preprocessing/torchtext/data/embeddings.npy
+./nlp_preprocessing/torchtext/data/sgns.sogou.char
+./nlp_preprocessing/torchtext/data/vocab.pkl
+
 
