@@ -46,7 +46,7 @@ train_iter = BucketIterator(dataset=train_data, batch_size=128, shuffle=True)
 
 
 # 查看源码可知，from_pretrained 调用了本类Embedding自身，所以它实现了下面2句的功能：
-#self.embed = nn.Embedding(vocab_size, embedding_dim)
+# self.embed = nn.Embedding(vocab_size, embedding_dim)
 # self.embed.weight.data.copy_(torch.from_numpy(pretrained_embeddings))
 Embedding.from_pretrained(TEXT.vocab.vectors)
 batch = next(iter(train_iter))
