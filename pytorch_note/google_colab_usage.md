@@ -1,5 +1,10 @@
 # google colab usage
 - 在 my dirve 下建立新的文件夹，然后选中该文件夹，点击new，选择more，选择 Google-colaboratory 就可以新建一个jupyter-notebook，可以选择配置是python3/python2，在执行代码程序的菜单项中选择运行时类型，来更改是cpu还是gpu。
+- 注意对于内置命令，不要加感叹号"!"，比如：
+```python
+cd
+ls
+```
 - 想要查看自己使用的gpu信息，首先将jupyter-notebook，配置中运行时类型选择为gpu，否则使用：
     ```python
     !/opt/bin/nvidia-msi   
