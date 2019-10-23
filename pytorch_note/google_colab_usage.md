@@ -8,7 +8,7 @@
 - 想要显示和使用虚拟机上文件信息，需要挂载云盘：
     ```python
     from google.colab import drive
-    dirve.mount('/content/gdrive')
+    drive.mount('/content/gdrive')
     ```
     **还有一个好处就是我们的云盘现在就在虚拟机/content/gdive下，我们将数据存放到云盘后，在程序中就可以读取云盘中的数据，就和使用自己电脑一样读取某个文件夹下的数据一样，同样计算的结果，也可以保存在云盘中，然后下载下来**
 - 查看内存和cpu信息
