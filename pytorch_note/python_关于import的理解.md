@@ -72,8 +72,27 @@
     print(fun())
     print(Constants.BOS)
     ```
-    运行 dataset.py 文件，结果正确，当然前提是 optim.py 文件中的 from .. import dataset 删除，因为一方面涉及到循环调用，另一方面， .. 正好对应的是 dataset.py 文件所在的包，但是当 dataset.py 当做函数入口，对应的这个包也就被破坏掉了。  
+    运行 dataset.py 文件，结果正确，当然前提是 optim.py 文件中的 from .. import dataset 删除，因为一方面涉及到循环调用，另一方面， .. 正好对应的是 dataset.py 文件所在的包，**但是当 dataset.py 当做函数入口，对应的这个包也就被破坏掉了。**  
     __init__.py 文件 中的 . 对应的是 transformer 包，这个包不受 dataset.py 文件运行影响, 所以没事。  
     理解一下 from transformer import fun ，一直没说的是，当这样的语句出现时候，首先调用的是包transformer的 __init__.py 文件，而该文件内部我们已经将 fun 函数通过 from .Optim import fun 导入了， 所以可以直接使用。这也就是__init__.py 文件不是一个包必备的文件，我们还要写它的原因，因为能够简化调用。  
     __init__.py 文件中 __all__ 的作用，当使用 from transformer import *，就是将 __all__ 列表中的东西都导入到模块中，但是一般不这么使用，因为这样很容易造成命名的冲突。  
 
+- 关键的问题，什么时候使用 . 和 .. ，以及为什么是必须  
+对于一个包内的 b.py 文件，当你把它当做函数入口的时候，导入同一级目录下 a.py 中的fun函数，就不能使用 '.'，应该写成：
+```python
+from a import fun
+```
+这是因为当前包被破坏，所以 '.' 表示的当前的包就没有意义；  
+如果从包c外调用 b.py 中的 gun 函数 ，而 b.py 又调用了自己包内 a.py 中的 fun 函数，b 不再是函数入后，那么 b.py 应该写成：
+```python
+from .a import fun
+```
+否则在包外的 c.py 文件中:
+```python
+from c.b import gun
+```
+会出现 module a 不存在。  
+总结就是：  
+- 包内互调，如果包内有某一个 py 文件是函数入口，那么就不能使用 '.'
+- 包外是函数入口，那么包内的互调，就必须使用 '.'
+- 如果函数入口是在一个两级包的外部，那么两级包内的互调，就会使用到 '..'
