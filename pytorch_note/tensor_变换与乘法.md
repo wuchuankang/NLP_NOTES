@@ -50,7 +50,8 @@
 
 ## reset shape
 
-- reshape
+- reshape  
+将所有的元素从最后一个维度按照顺序拉成一个一维的向量，然后在按照顺序进行reshape 维度的组装。
 
 - view  
 二者区别：当tensor都为contiguous类型(邻近模式)时，两个函数并无差异，使用原来的数据内容，不会复制一份新的出来；如果tensor不是，例如经过了transpose或permute之后，需要contiguous然后再使用view。reshape其实就是.contiguous+view,这样不会开辟新的空间存放tensor，而是共享原来的数据内存。
