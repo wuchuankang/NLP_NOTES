@@ -45,14 +45,15 @@
     - 上面两者功能近似，transpose 一次只能转置两个维度，permute可以多个，但及时转置两个， permute 也得把各个维度写清楚， transpose 没有必要
     - 两者转置后，并不改变原来 tensor 中元素在内存中的位置，只是标签顺序改变了。这之后进行矩阵运算操作(加、乘)是没有问题的，但是要进行 view 操作，就必须先 顺序化，这是因为 view 是在连续的内存上操作的，它会认为 转置 之后的tensor标签顺序和其存储内存是一致的，但是实际不一致。.contiguous() 就会新生成一个 tensor, 使得标签顺序和内存顺序一致。
     - reshape 是 .contiguous().view()  等价的，这个可以实现简化步骤
+     
+    ![pic](../pic/review.jpg)
 
 ## reset shape
 
 - reshape
 
 - view  
-    ![pic](./IMG_20191009_104442.jpg)
-
+二者区别：当tensor都为contiguous类型(邻近模式)时，两个函数并无差异，使用原来的数据内容，不会复制一份新的出来；如果tensor不是，例如经过了transpose或permute之后，需要contiguous然后再使用view。reshape其实就是.contiguous+view,这样不会开辟新的空间存放tensor，而是共享原来的数据内存。
 
 ## tensor 乘法
 
