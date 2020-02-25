@@ -7,7 +7,7 @@
 ## 神经概率语言模型
 用神经网络对 $p(w|context(w))$ 进行建模，其中 $context(w)$ 是 $w$ 的前 $n$ 个词语。对于语料库 $C(corpus)$ 建立词典 $V$，$V$ 一般是语料库中不重复的单词，如果去除停用词，词典就不含停用词，但某些停用词不一定要去除，因为在某些场景下停用词也是有意义的。用 `ont-hot` 来表示词典中每一个词，假设词典 $V$ 的大小是 $N$，那么词典中第 $i$ 个词就是一个维度是 $N\times 1$ 的列向量，该向量中除了第 $i$ 个位置是 `1`，其他元素皆为 `0`。**这就化为了多分类问题，分类数就是 $N$。**    
 其网络图是  
-![pic1](../pic/Selection_027.jpg)  
+![pic1](../../pic/Selection_027.jpg)  
 其中 $\bold v(context(w)_1)$ 是 $w$ 前面 $n$ 个词中第一个词的词向量，维度是 $R^{m\times 1}$。之前说用 `one-hot` 来表示词，为什么输入突然变成了这样一个词向量呢？其实很简单，主要是这个图省略了一步从原始输入(`one-hot`表示) 到 `input` 的这个层，那这个层具体怎么构建？ 将 $w$ 前 $n$ 个词的 `one-hot` 表示的列向量转置后，再一行行放到一个矩阵 $G$ 中，$G$ 的维度就是 $R^{n\times N}$，原始输入到 `input` 层的权重矩阵 $W_o$ 的维度为$R^{N\times m}$，那么`input` 层 $V=GW_o$ 维度就是 $R^{n\times m}$，就是前面说的 $w$ 前面 $n$ 词的词向量。其中要注意的是， $W_o$ 的第 $i$ 行就是第 $i$ 词的词向量，因为每个词都用 `one-hot` 表示，所以第 $i$ 位置处词的 `one-hot` 表示的 $h_i$ 和 $W_o$ 相乘后，正好把 $W_o$ 的第 $i$ 行给提取出来了。  
 投影层就是将这 $n$ 个词向量转置后，再一行行的放到一个矩阵 $X_w$ 中。然后就是常规的神经网络的向前传递：  
 $$
@@ -18,14 +18,14 @@ $y_w$ 维度是 $R^{N\times 1}$，即是词典中每一个词的 `score`。通�
 
 ## Word2vec 
 `word2vec` 是建立在 `Benjio` 算法的基础上，通过一些方法来减少计算量，从而能够很快的得到词向量。具体模型有两个：`CBOW model` 和 `skip-gram model`。在减少计算量上，方法有两种：`hierarchical softmax` 和 `negative sampling`。另外为了减少计算量，还将隐藏层给拿掉了。  
-![pic2](../pic/Selection_028.jpg)
+![pic2](../../pic/Selection_028.jpg)
 `CBOW` (连续词袋模型)，同样，输入层 $context(w)$ 词向量的由来也省略了原始层和输入层的映射，其权重矩阵的每一行就是对应单词的词向量。`input` 到 `projection`，是将 $context(w)$ 词向量求和，`projection` 到 `output` 没有用 `Benjio` 的全连接，直接就给出了词 $w$ 的预测，这当然是为了减少计算量，但这是怎么做到的？这就用到了 `hierarchical softmax` 和 `negative sampling`。
 
 ### CBOW + Hierarchical softmax
 
-![pic3](../pic/Selection_029.jpg)
+![pic3](../../pic/Selection_029.jpg)
 从图中可以看到，`projection` 到 `output` 构造了一棵 `Huffman` 树。`huffman` 树也叫最小加权路径算法。与堆的结构相似，但构造过程不同。找出词典中每一个词的词频，以词频作为权重，每个词作为节点，构造 `huffuman ` 树。例如：
-![pic4](../pic/Selection_030.jpg)
+![pic4](../../pic/Selection_030.jpg)
 以词频作为权重构造 `Huffman` 树是有原因的，明白如何从 `Huffman` 树中求得 $p(w|context(w))$，就知道为何使用词频为权重了。  
 `Hierarchical softmax` 就是依靠 `Huffman` 树将原来应该是对 $N$ 个分类应用 `softmax` 的问题，转化为分层的 `Logistics` 问题。具体做法：  
 就是给每个节点编码，左子树编码为 `1`，右子树编码为 `0`，这就是 `Huffman` 编码。可以将编码为 `1` 的认为是正类，编码为 `0` 的认为是负类。以上图中“巴西”为例子，令 $w=$ '巴西'，如何预测到 $w$ 呢？从根节点开始，先预测到权重为 `23` 节点正类，然后预测到权重为 `9` 的负类，然后在预测到正类就预测出 $w$ 的概率了。对同一个 $X_w$ 使用 `Logistics` 回归预测过程依次如下：
@@ -71,5 +71,5 @@ $$
 
 ### Negative sampling
 上面没有说明是如何进行负采样的，摘录《word2vec中的数学原理详解》，本文大部分都来自这篇文章，并加入了自己的理解，其中关于负采样的部分，《详解》中的解释不对，但是公式是对的。
-![pic5](../pic/Selection_032.jpg)
-![pic6](../pic/Selection_033.jpg)
+![pic5](../../pic/Selection_032.jpg)
+![pic6](../../pic/Selection_033.jpg)
