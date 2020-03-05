@@ -48,7 +48,7 @@ $$
 - LSTM 引入了一个**新的内部状态$c_t$，专门进行线性的循环信息的传递，同时非线性的输出信息给隐藏层的外部隐状态$h_t$**  
     $$
     c_t = f_t \odot c_{t-1} + i_t \odot \hat c_{t}  \\
-    h_t = o_t \odot \tanh \hat c_t \\
+    h_t = o_t \odot \tanh c_t \\
     
     \hat c_t = \tanh(U_c h_{t-1} + W_c x_t + b_c)     \\
     f_t = \sigma (U_f h_{t-1} + W_f x_t + b_f)    \\
